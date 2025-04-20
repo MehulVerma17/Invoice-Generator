@@ -101,7 +101,7 @@ const InvoiceForm = forwardRef((props, ref) => {
   });
 
   const [items, setItems] = useState([
-    { description: "", quantity: 0, price: 0 },
+    { description: "", quantity: 1, price: 0 },
   ]);
 
   const subtotal = items.reduce(
