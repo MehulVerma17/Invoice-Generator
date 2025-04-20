@@ -38,8 +38,8 @@ app.post("/generate-pdf", async (req, res) => {
     // 3. Launch Puppeteer to generate PDF
     // const browser = await puppeteer.launch(); //This is for Local Host only
     const browser = await puppeteer.launch({
-      headless: "true", // or true if "new" causes problems
-      executablePath: isDev ? undefined : "/usr/bin/google-chrome-stable", // auto-resolves Chrome path
+      headless: "new",
+      executablePath: isDev ? undefined : process.env.PUPPETEER_EXECUTABLE_PATH,
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     const page = await browser.newPage();
