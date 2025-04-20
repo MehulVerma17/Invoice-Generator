@@ -36,7 +36,7 @@ app.post("/generate-pdf", async (req, res) => {
     // 3. Launch Puppeteer to generate PDF
     // const browser = await puppeteer.launch(); //This is for Local Host only
     const browser = await puppeteer.launch({
-      headless: "new", // or true if "new" causes problems
+      headless: "true", // or true if "new" causes problems
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     const page = await browser.newPage();
