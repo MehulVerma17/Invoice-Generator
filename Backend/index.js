@@ -34,7 +34,11 @@ app.post("/generate-pdf", async (req, res) => {
     console.log(invoiceData);
 
     // 3. Launch Puppeteer to generate PDF
-    const browser = await puppeteer.launch();
+    // const browser = await puppeteer.launch(); //This is for Local Host only
+    const browser = await puppeteer.launch({
+      headless: "new", // or true if "new" causes problems
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
     const page = await browser.newPage();
 
     await page.setContent(finalHtml, { waitUntil: "networkidle0" });
@@ -58,8 +62,10 @@ app.post("/generate-pdf", async (req, res) => {
     res.set("Content-Disposition", "attachment; filename=invoice.pdf");
     res.send(pdfBuffer);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error generating PDF" });
+    console.error("PDF generation error:", error);
+    res
+      .status(500)
+      .json({ message: "Error generating PDF", error: error.message });
   }
 });
 
