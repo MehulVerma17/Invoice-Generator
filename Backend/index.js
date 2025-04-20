@@ -39,7 +39,7 @@ app.post("/generate-pdf", async (req, res) => {
       headless: "true", // or true if "new" causes problems
       executablePath:
         process.env.NODE_ENV === "production"
-          ? process.env.PUPPETEER_EXECUTABLE_PATH
+          ? "/usr/bin/google-chrome-stable"
           : puppeteer.executablePath(), // auto-resolves Chrome path
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
