@@ -33,14 +33,13 @@ app.post("/generate-pdf", async (req, res) => {
     const finalHtml = template(invoiceData);
     console.log(invoiceData);
 
+    const isDev = process.env.NODE_ENV !== "production";
+
     // 3. Launch Puppeteer to generate PDF
     // const browser = await puppeteer.launch(); //This is for Local Host only
     const browser = await puppeteer.launch({
       headless: "true", // or true if "new" causes problems
-      executablePath:
-        process.env.NODE_ENV === "production"
-          ? "/usr/bin/google-chrome-stable"
-          : puppeteer.executablePath(), // auto-resolves Chrome path
+      executablePath: isDev ? undefined : "/usr/bin/google-chrome-stable", // auto-resolves Chrome path
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     const page = await browser.newPage();
