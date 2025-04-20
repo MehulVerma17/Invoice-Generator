@@ -15,7 +15,7 @@ A modern web-based invoice generator built with React and Tailwind CSS for the f
   
   📄 Generate searchable, copyable PDFs via a backend Node.js API
   
-  🎯 Clean, minimal UI using Tailwind CSS
+  🎯 Clean, minimal UI using Tailwind CSS and DaisyUi
 
 # ⚙️ Tech Stack
   Frontend: React, Tailwind CSS, React Context API, DaisyUi
