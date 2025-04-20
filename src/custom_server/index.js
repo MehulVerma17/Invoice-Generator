@@ -4,9 +4,13 @@ import path from "path";
 import puppeteer from "puppeteer";
 import Handlebars from "handlebars";
 import cors from "cors"; // Import cors package
+import dotenv from "dotenv";
+
+// Load environment variables /.env file
+dotenv.config();
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT;
 
 // Middleware to parse JSON data
 app.use(express.json());
