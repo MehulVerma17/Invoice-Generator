@@ -12,7 +12,7 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
+      "src": "/custom_server/(.*)",
       "dest": "/src/custom_server/index.js"
     },
     {
