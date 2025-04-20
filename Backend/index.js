@@ -1,7 +1,7 @@
 import express from "express";
 import fs from "fs";
 import path from "path";
-import puppeteer from "puppeteer-core";
+import puppeteer from "puppeteer";
 import Handlebars from "handlebars";
 import cors from "cors"; // Import cors package
 import dotenv from "dotenv";
@@ -33,13 +33,10 @@ app.post("/generate-pdf", async (req, res) => {
     const finalHtml = template(invoiceData);
     console.log(invoiceData);
 
-    const isDev = process.env.NODE_ENV !== "production";
-
     // 3. Launch Puppeteer to generate PDF
     // const browser = await puppeteer.launch(); //This is for Local Host only
     const browser = await puppeteer.launch({
-      headless: "new",
-      executablePath: isDev ? undefined : process.env.PUPPETEER_EXECUTABLE_PATH,
+      headless: "true", // or true if "new" causes problems
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     const page = await browser.newPage();
