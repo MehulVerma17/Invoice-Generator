@@ -9,13 +9,16 @@ const DownloadButton = ({ targetRef }) => {
 
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:3001/generate-pdf", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(invoiceData),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/generate-pdf`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(invoiceData),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to generate PDF");

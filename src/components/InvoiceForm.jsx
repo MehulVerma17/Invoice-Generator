@@ -253,7 +253,7 @@ const InvoiceForm = forwardRef((props, ref) => {
                       onChange={(e) =>
                         handleItemChange(idx, "price", e.target.value)
                       }
-                      className="w-full p-2 bg-white focus:outline-none"
+                      className="w-full p-2 bg-white focus:outline-none rounded-r-md"
                     />
                   </div>
                 </td>

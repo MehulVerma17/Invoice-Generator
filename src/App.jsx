@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import InvoiceForm from "./components/InvoiceForm";
 import SelectedCurrency from "./components/SelectedCurrency";
 import { CurrencyProvider } from "./components/CurrencyContext";
@@ -8,6 +8,10 @@ import DownloadButton from "./components/DownloadButton";
 
 function App() {
   const invoiceRef = useRef();
+  useEffect(() => {
+    // Force the theme to 'dark' on page load
+    document.documentElement.setAttribute("data-theme", "dark");
+  }, []);
   return (
     <>
       <CurrencyProvider>
