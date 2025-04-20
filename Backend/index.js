@@ -1,7 +1,7 @@
 import express from "express";
 import fs from "fs";
 import path from "path";
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
 import Handlebars from "handlebars";
 import cors from "cors"; // Import cors package
 import dotenv from "dotenv";
