@@ -30,7 +30,16 @@ const port = process.env.PORT;
 app.use(express.json());
 
 // Enable CORS for all origins (you can restrict this to specific origins later)
-app.use(cors());
+// app.use(cors());
+
+const isDev = process.env.NODE_ENV !== "production";
+const corsOptions = {
+  origin: isDev ? "*" : process.env.CLIENT_ORIGIN, // Allow all in dev, specific in prod
+  methods: ["GET", "POST", "OPTIONS"],
+  credentials: true, // Allow credentials (cookies, auth headers)
+};
+
+app.use(cors(corsOptions));
 
 // Load the HTML template (Handlebars)
 const templatePath = path.join(process.cwd(), "invoice-template.html");
