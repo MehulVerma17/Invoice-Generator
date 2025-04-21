@@ -5,16 +5,19 @@ import path from "path";
 import Handlebars from "handlebars";
 import cors from "cors"; // Import cors package
 import dotenv from "dotenv";
-import { executablePath } from "puppeteer";
+// import { executablePath } from "puppeteer";
 
 let chrome = {};
 let puppeteer;
 
 if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-  chrome = require("chrome-aws-lambda");
-  puppeteer = require("puppeteer-core");
+  const chromeModule = await import("chrome-aws-lambda");
+  const puppeteerCore = await import("puppeteer-core");
+  chrome = chromeModule.default;
+  puppeteer = puppeteerCore.default;
 } else {
-  puppeteer = require("puppeteer");
+  const puppeteerModule = await import("puppeteer");
+  puppeteer = puppeteerModule.default;
 }
 
 // Load environment variables /.env file
