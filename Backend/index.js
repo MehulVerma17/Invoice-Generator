@@ -32,17 +32,13 @@ app.use(express.json());
 // Enable CORS for all origins (you can restrict this to specific origins later)
 // app.use(cors());
 
-const isDev = process.env.NODE_ENV !== "production";
+const allowedOrigin =
+  process.env.NODE_ENV === "production" ? process.env.CLIENT_ORIGIN : "*";
+
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (isDev || origin === process.env.CLIENT_ORIGIN) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: allowedOrigin,
   methods: ["GET", "POST", "OPTIONS"],
-  credentials: true,
+  // credentials: true, // only if your request includes cookies or auth
 };
 
 app.use(cors(corsOptions));
