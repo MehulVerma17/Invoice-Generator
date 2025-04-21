@@ -1,10 +1,21 @@
 import express from "express";
 import fs from "fs";
 import path from "path";
-import puppeteer from "puppeteer";
+// import puppeteer from "puppeteer";
 import Handlebars from "handlebars";
 import cors from "cors"; // Import cors package
 import dotenv from "dotenv";
+import { executablePath } from "puppeteer";
+
+let chrome = {};
+let puppeteer;
+
+if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+  chrome = require("chrome-aws-lambda");
+  puppeteer = require("puppeteer-core");
+} else {
+  puppeteer = require("puppeteer");
+}
 
 // Load environment variables /.env file
 dotenv.config();
@@ -25,6 +36,18 @@ const template = Handlebars.compile(templateHtml);
 
 // Invoice PDF generation logic
 app.post("/generate-pdf", async (req, res) => {
+  let options = {};
+
+  if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+    options = {
+      args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
+      defaultViewport: chrome.defaultViewport,
+      executablePath: await chrome.executablePath,
+      headless: true,
+      ignoreHTTPSErrors: true,
+    };
+  }
+
   try {
     // 1. Use data sent in the POST request
     const invoiceData = req.body;
@@ -35,11 +58,13 @@ app.post("/generate-pdf", async (req, res) => {
 
     // 3. Launch Puppeteer to generate PDF
     // const browser = await puppeteer.launch(); //This is for Local Host only
-    const browser = await puppeteer.launch({
-      headless: "true", // or true if "new" causes problems
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
-    const page = await browser.newPage();
+    // const browser = await puppeteer.launch({
+    //   headless: "true", // or true if "new" causes problems
+    //   args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    // });
+    let browser = await puppeteer.launch(options);
+
+    let page = await browser.newPage();
 
     await page.setContent(finalHtml, { waitUntil: "networkidle0" });
 
