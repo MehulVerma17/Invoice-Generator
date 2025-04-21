@@ -25,4 +25,4 @@ A modern web-based invoice generator built with React and Tailwind CSS for the f
   Hosting: Vercel
   
 ### 🚀 Live Link  
-[![Live Demo](https://img.shields.io/badge/-Live%20Demo-34D399?style=for-the-badge&logo=vercel&logoColor=white)](https://invoice-generator-dgsa.vercel.app/)
+  [![Live Demo](https://img.shields.io/badge/-Live%20Demo-34D399?style=for-the-badge&logo=vercel&logoColor=white)](https://invoice-generator-dgsa.vercel.app/)
