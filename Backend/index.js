@@ -46,9 +46,20 @@ app.post("/generate-pdf", async (req, res) => {
   let options = {};
   if (process.env.AWS_LAMBDA_FUNCTION_VERSION || process.env.RENDER) {
     options = {
-      args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
+      args: [
+        ...chrome.args,
+        "--hide-scrollbars",
+        "--disable-web-security",
+        "--disable-setuid-sandbox",
+        "--no-sandbox",
+        "--single-process",
+        "--no-zygote",
+      ],
       defaultViewport: chrome.defaultViewport,
-      executablePath: await chrome.executablePath,
+      executablePath:
+        process.env.NODE_ENV === "production"
+          ? process.env.PUPPETEER_EXECUTABLE_PATH
+          : puppeteer.executablePath(),
       headless: true,
       ignoreHTTPSErrors: true,
     };
