@@ -6,6 +6,11 @@ import Handlebars from "handlebars";
 import cors from "cors"; // Import cors package
 import dotenv from "dotenv";
 // import { executablePath } from "puppeteer";
+import { fileURLToPath } from "url";
+
+// Recreate __dirname in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 let chrome = {};
 let puppeteer;
@@ -44,7 +49,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Load the HTML template (Handlebars)
-const templatePath = path.join(process.cwd(), "invoice-template.html");
+// const templatePath = path.join(process.cwd(), "invoice-template.html"); //for local
+const templatePath = path.join(__dirname, "invoice-template.html");
 const templateHtml = fs.readFileSync(templatePath, "utf8");
 const template = Handlebars.compile(templateHtml);
 
