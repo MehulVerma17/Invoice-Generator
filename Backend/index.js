@@ -4,84 +4,61 @@ import path from "path";
 import Handlebars from "handlebars";
 import cors from "cors";
 import dotenv from "dotenv";
+import puppeteer from "puppeteer";
 import { fileURLToPath } from "url";
 
 // Recreate __dirname in ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-let puppeteer;
-let chrome = {};
-
-if (process.env.AWS_LAMBDA_FUNCTION_VERSION || process.env.RENDER) {
-  const chromeModule = await import("chrome-aws-lambda");
-  const puppeteerCore = await import("puppeteer-core");
-  chrome = chromeModule.default;
-  puppeteer = puppeteerCore.default;
-} else {
-  puppeteer = (await import("puppeteer")).default;
-}
-
+// Load .env config
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
 
+// Enable JSON body parsing
 app.use(express.json());
 
+// CORS setup
 const allowedOrigin =
   process.env.NODE_ENV === "production" ? process.env.CLIENT_ORIGIN : "*";
-const corsOptions = {
-  origin: allowedOrigin,
-  methods: ["GET", "POST", "OPTIONS"],
-};
 
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: allowedOrigin,
+    methods: ["GET", "POST", "OPTIONS"],
+  })
+);
 
+// Load and compile Handlebars HTML template
 const templatePath = path.join(__dirname, "invoice-template.html");
 const templateHtml = fs.readFileSync(templatePath, "utf8");
 const template = Handlebars.compile(templateHtml);
 
+// PDF generation endpoint
 app.post("/generate-pdf", async (req, res) => {
-  let options = {};
-  if (process.env.AWS_LAMBDA_FUNCTION_VERSION || process.env.RENDER) {
-    options = {
-      args: [
-        ...chrome.args,
-        "--hide-scrollbars",
-        "--disable-web-security",
-        "--disable-setuid-sandbox",
-        "--no-sandbox",
-        "--single-process",
-        "--no-zygote",
-      ],
-      defaultViewport: chrome.defaultViewport,
-      executablePath:
-        process.env.NODE_ENV === "production"
-          ? process.env.PUPPETEER_EXECUTABLE_PATH
-          : puppeteer.executablePath(),
-      headless: true,
-      ignoreHTTPSErrors: true,
-    };
-  }
-
   try {
     const invoiceData = req.body;
     const finalHtml = template(invoiceData);
 
-    let browser = await puppeteer.launch(options);
-    let page = await browser.newPage();
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--single-process",
+        "--no-zygote",
+      ],
+    });
+
+    const page = await browser.newPage();
     await page.setContent(finalHtml, { waitUntil: "networkidle0" });
 
     const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,
-      margin: {
-        top: "20px",
-        bottom: "20px",
-        left: "20px",
-        right: "20px",
-      },
+      margin: { top: "20px", bottom: "20px", left: "20px", right: "20px" },
     });
 
     await browser.close();
@@ -97,6 +74,7 @@ app.post("/generate-pdf", async (req, res) => {
   }
 });
 
+// Start the server
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running on port ${port}`);
 });
