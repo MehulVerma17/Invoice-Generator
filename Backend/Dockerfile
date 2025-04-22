@@ -31,5 +31,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
+RUN which chromium || which chromium-browser || which google-chrome || echo "Chrome not found"
+
 
 CMD ["node", "index.js"]
