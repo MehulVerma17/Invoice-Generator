@@ -1,35 +1,30 @@
-# Use Node.js base image
 FROM node:18-slim
 
-# Set working directory
+# Install required dependencies for Chromium
+RUN apt-get update && apt-get install -y \
+    chromium \
+    libxshmfence1 \
+    libgbm1 \
+    libasound2 \
+    fonts-liberation \
+    libnss3 \
+    libx11-xcb1 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxrandr2 \
+    libgtk-3-0 \
+    ca-certificates \
+    wget \
+    --no-install-recommends && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+
 WORKDIR /app
 
-# Install necessary system dependencies
-RUN apt-get update && apt-get install -y \
-  libx11-6 \
-  libxkbcommon0 \
-  libnss3 \
-  libxss1 \
-  libasound2 \
-  libatk-bridge2.0-0 \
-  libgtk-3-0 \
-  libgbm1 \
-  wget \
-  fonts-liberation \
-  xdg-utils \
-  --no-install-recommends && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
-
-# Copy package files and install dependencies
 COPY package*.json ./
-RUN npm install
-
-# Copy source files
+RUN npm ci
 COPY . .
 
-# Expose port
-EXPOSE 3000
-
-# Start the server
 CMD ["node", "index.js"]
