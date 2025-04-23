@@ -1,0 +1,12 @@
+{
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    },
+    "command": "cd Backend && npm install",
+    "output": "Backend"
+  },
+  "start": {
+    "command": "cd Backend && node index.js"
+  }
+}
