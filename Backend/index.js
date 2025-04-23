@@ -47,13 +47,13 @@ app.post("/generate-pdf", async (req, res) => {
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
-        "--single-process",
-        "--no-zygote",
+        // "--single-process",
+        // "--no-zygote",
       ],
-      executablePath:
-        process.env.NODE_ENV === "production"
-          ? "/usr/bin/chromium-browser"
-          : puppeteer.executablePath(),
+      // executablePath:
+      //   process.env.NODE_ENV === "production"
+      //     ? "/usr/bin/chromium-browser"
+      //     : puppeteer.executablePath(),
     });
 
     const page = await browser.newPage();
