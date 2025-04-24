@@ -20,9 +20,9 @@ A modern web-based invoice generator built with React and Tailwind CSS for the f
 # ⚙️ Tech Stack
   Frontend: React, Tailwind CSS, React Context API, DaisyUi
   
-  Backend: Node.js, Express, Puppeteer, handlebars
+  Backend: Node.js, Express, html-pdf-node, handlebars
   
-  Hosting: Vercel
+  Hosting: Vercel, Railway
   
 ### 🚀 Live Link  
   [![Live Demo](https://img.shields.io/badge/-Live%20Demo-34D399?style=for-the-badge&logo=vercel&logoColor=white)](https://invoice-generator-dgsa.vercel.app/)
